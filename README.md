@@ -4,6 +4,15 @@ VoteWise India is a non-partisan election process education app for students and
 
 This is an educational simulation. It is not an official Election Commission website and it does not provide political recommendations.
 
+
+## Submission Links
+
+- Live App: https://votewise-india-api-366445017721.us-central1.run.app
+- GitHub Repository: https://github.com/AdvikSharma917/votewise-india
+- Technical Blog: https://dev.to/advik_sharma917/building-votewise-india-an-ai-powered-election-process-education-simulator-2njb
+- LinkedIn Build-in-Public Post: https://www.linkedin.com/feed/update/urn:li:activity:7455754906424143872/
+
+
 ## Quick Start
 
 Requirements:
