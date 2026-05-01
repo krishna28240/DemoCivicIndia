@@ -262,7 +262,10 @@
             <label><input type="checkbox" id="reading-focus" /><span><strong>Reading focus</strong><small>Reduces visual distraction and emphasizes content.</small></span></label>
             <label><input type="checkbox" id="theme-sync" /><span><strong>Theme shortcut</strong><small>Switches between light and dark mode here too.</small></span></label>
           </div>
-          <button class="button secondary" type="button" id="reset-settings">Reset all settings</button>
+          <div class="privacy-note">
+            <p>Progress is saved on this device only. No account required. No personal voter data is collected.</p>
+          </div>
+          <button class="button secondary" type="button" id="reset-settings">Reset all settings & progress</button>
           <p class="settings-status" id="settings-status" role="status" aria-live="polite"></p>
         </div>
       </section>
@@ -274,6 +277,7 @@
         website and does not provide political recommendations.
       </p>
       <p>Uses Gemini through a secure server route and is ready for Google/Firebase-style deployment.</p>
+      <p class="footer-links"><a href="#project-details">Project Details for Evaluators</a></p>
     </footer>
 
     <script type="module" src="./app.js"></script>

@@ -120,6 +120,7 @@ test("hash routes resolve to app-style views and legacy sections", () => {
   assert.deepEqual(resolveViewRoute("#glossary"), { view: "glossary", targetId: "" });
   assert.deepEqual(resolveViewRoute("#timeline"), { view: "learn", targetId: "timeline" });
   assert.deepEqual(resolveViewRoute("#accessibility"), { view: "settings", targetId: "accessibility" });
+  assert.deepEqual(resolveViewRoute("#project-details"), { view: "project-details", targetId: "" });
   assert.deepEqual(resolveViewRoute("#unknown"), { view: "home", targetId: "" });
 });
 

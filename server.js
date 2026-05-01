@@ -25,6 +25,16 @@ loadDotEnv();
 const port = Number(process.env.PORT || 3000);
 const model = process.env.GEMINI_MODEL || DEFAULT_GEMINI_MODEL;
 
+const GEMINI_SYSTEM_INSTRUCTION = [
+  "You are VoteWise India's AI Election Guide.",
+  "Explain the Indian election process for students and first-time voters.",
+  "Be non-partisan, factual, concise, and beginner-friendly.",
+  "Do not recommend, rank, support, or oppose any political party or candidate.",
+  "Do not use real party names or real candidate names.",
+  "If asked for political persuasion, refuse briefly and redirect to election process education.",
+  "Clarify that VoteWise India is educational and not an official Election Commission website when relevant."
+].join(" ");
+
 const requestLog = new Map();
 
 const mimeTypes = {
@@ -74,6 +84,10 @@ server.listen(port, () => {
   console.log(`VoteWise India running at http://localhost:${port}`);
 });
 
+/**
+ * Handles incoming POST requests to the AI guide endpoint.
+ * Validates the question, checks rate limits, and safely calls Gemini.
+ */
 async function handleGuideRequest(req, res) {
   if (isRateLimited(req)) {
     sendJson(res, 429, {
@@ -139,16 +153,13 @@ async function handleQuizResultRequest(req, res) {
   sendJson(res, 200, result);
 }
 
+/**
+ * Calls the Gemini API with the validated question and system instruction.
+ * @param {string} question - The sanitized user question.
+ * @param {string} apiKey - The Gemini API key.
+ * @returns {Promise<string>} The AI response or a safe fallback.
+ */
 async function askGemini(question, apiKey) {
-  const systemInstruction = [
-    "You are VoteWise India's AI Election Guide.",
-    "Explain the Indian election process for students and first-time voters.",
-    "Be non-partisan, factual, concise, and beginner-friendly.",
-    "Do not recommend, rank, support, or oppose any political party or candidate.",
-    "Do not use real party names or real candidate names.",
-    "If asked for political persuasion, refuse briefly and redirect to election process education.",
-    "Clarify that VoteWise India is educational and not an official Election Commission website when relevant."
-  ].join(" ");
 
   const response = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
@@ -160,7 +171,7 @@ async function askGemini(question, apiKey) {
       },
       body: JSON.stringify({
         systemInstruction: {
-          parts: [{ text: systemInstruction }]
+          parts: [{ text: GEMINI_SYSTEM_INSTRUCTION }]
         },
         contents: [
           {

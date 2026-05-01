@@ -15,7 +15,7 @@ const recommendationPatterns = [
 ];
 
 const GEMINI_BUSY_MARKERS = ["unavailable", "high demand", "overloaded", "busy"];
-const VIEW_ROUTES = new Set(["home", "learn", "simulator", "ai-guide", "glossary", "quiz", "teacher", "settings"]);
+const VIEW_ROUTES = new Set(["home", "learn", "simulator", "ai-guide", "glossary", "quiz", "teacher", "settings", "project-details"]);
 const LEGACY_SECTION_ROUTES = {
   top: "home",
   timeline: "learn",
@@ -28,6 +28,11 @@ const LEGACY_SECTION_ROUTES = {
   accessibility: "settings"
 };
 
+/**
+ * Sanitizes a user question by trimming whitespace and enforcing a maximum length.
+ * @param {string} input - The raw user input.
+ * @returns {string} The sanitized question.
+ */
 export function sanitizeQuestion(input) {
   return String(input ?? "")
     .replace(/\s+/g, " ")
@@ -35,15 +40,30 @@ export function sanitizeQuestion(input) {
     .slice(0, MAX_AI_QUESTION_LENGTH);
 }
 
+/**
+ * Checks if a question is asking for political recommendations or preferences.
+ * @param {string} input - The user question.
+ * @returns {boolean} True if the question is a political recommendation question.
+ */
 export function isPoliticalRecommendationQuestion(input) {
   const question = sanitizeQuestion(input);
   return recommendationPatterns.some((pattern) => pattern.test(question));
 }
 
+/**
+ * Gets the standard safe refusal message for political questions.
+ * @returns {string} The non-partisan refusal message.
+ */
 export function getSafeRefusal() {
   return refusal;
 }
 
+/**
+ * Generates a user-friendly error message for Gemini API failures.
+ * @param {number|string} status - The HTTP status code.
+ * @param {string} detail - The error detail string.
+ * @returns {string} A user-friendly fallback message.
+ */
 export function getGeminiServiceMessage(status, detail = "") {
   const normalizedDetail = String(detail || "").toLowerCase();
   const isBusy = Number(status) === 503 || GEMINI_BUSY_MARKERS.some((marker) => normalizedDetail.includes(marker));
@@ -55,6 +75,11 @@ export function getGeminiServiceMessage(status, detail = "") {
   return "I could not reach Gemini right now. You can still use the journey, simulator, glossary, myth cards, and quiz offline.";
 }
 
+/**
+ * Validates a user question before sending it to the AI guide.
+ * @param {string} input - The raw user input.
+ * @returns {Object} Validation result containing { ok, reason, question, blocked }.
+ */
 export function validateQuestion(input) {
   const question = sanitizeQuestion(input);
 
@@ -82,6 +107,12 @@ export function getVoteReadyLabel(score) {
   return "Election Process Pro";
 }
 
+/**
+ * Scores a user's quiz answers and identifies weak topics.
+ * @param {Array} questions - The array of quiz questions.
+ * @param {Object} answers - The user's answers mapped by question ID or index.
+ * @returns {Object} The complete quiz result including score, percentage, and weak topics.
+ */
 export function scoreQuiz(questions, answers) {
   let score = 0;
   const explanations = [];
@@ -201,6 +232,12 @@ export function getRecommendedNextSteps(weakTopics) {
   return weakTopics.slice(0, 3).map((topic) => `Review the ${topic} section and retry related quiz questions.`);
 }
 
+/**
+ * Creates a mocked voting state for the simulator.
+ * @param {string} option - The candidate option selected.
+ * @returns {Object} The mocked vote state.
+ * @throws {Error} If the option is not a valid fictional candidate.
+ */
 export function createVoteState(option) {
   const selected = String(option ?? "").trim();
   const allowed = ["Candidate A", "Candidate B", "Candidate C", "NOTA"];

@@ -123,9 +123,16 @@ VoteWise India uses hash routes instead of a heavy frontend framework:
 
 Refreshing a URL with one of these hashes opens the matching view. Legacy section hashes like `#timeline`, `#journey`, and `#accessibility` also resolve to the correct view.
 
-## Security
+## Security & Privacy
 
-Implemented:
+Privacy:
+
+- No login required.
+- No personal voter data collected.
+- Progress is stored locally on the device (accessibility, pathway, quiz scores).
+- Optional Firestore stores only anonymous quiz metadata when configured.
+
+Security Implemented:
 
 - Gemini key is server-side only.
 - `.env` and `.env.*` are ignored by Git.

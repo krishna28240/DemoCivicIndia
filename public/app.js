@@ -25,19 +25,23 @@ import {
   validateQuestion
 } from "./lib/electionLogic.js";
 
+const progress = loadProgress();
+
 const appState = {
   selectedStep: journeySteps[0],
-  selectedPathway: "firstTime",
-  selectedScenario: "firstTimeVoter",
+  selectedPathway: progress.selectedPathway,
+  selectedScenario: progress.selectedScenario,
+  simulatorTried: progress.simulatorTried,
+  viewedGlossaryTerms: progress.viewedGlossaryTerms,
   vote: resetVoteState(),
-  lastQuizResult: null,
+  lastQuizResult: progress.lastQuizResult,
   slipTimer: null,
   settings: loadSettings(),
   revealObserver: null,
   sectionObserver: null
 };
 
-const APP_VIEW_ORDER = ["home", "learn", "simulator", "ai-guide", "glossary", "quiz", "teacher", "settings"];
+const APP_VIEW_ORDER = ["home", "learn", "simulator", "ai-guide", "glossary", "quiz", "teacher", "settings", "project-details"];
 const CANDIDATE_OPTIONS = ["Candidate A", "Candidate B", "Candidate C", "NOTA"];
 const TOOLTIP_TERMS = ["Model Code of Conduct", "Electoral Roll", "Constituency", "VVPAT", "NOTA", "EVM"];
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -167,12 +171,23 @@ function bindEvents() {
   bindSetting(els.themeSync, "dark");
 
   els.resetSettings.addEventListener("click", () => {
+    localStorage.clear();
     appState.settings = getDefaultSettings();
+    const defaultProgress = getDefaultProgress();
+    appState.selectedPathway = defaultProgress.selectedPathway;
+    appState.selectedScenario = defaultProgress.selectedScenario;
+    appState.simulatorTried = defaultProgress.simulatorTried;
+    appState.viewedGlossaryTerms = defaultProgress.viewedGlossaryTerms;
+    appState.lastQuizResult = defaultProgress.lastQuizResult;
+
     saveSettings();
+    saveProgress();
     applySettings();
     renderJourney();
     renderPathways();
-    setStatus(els.settingsStatus, "Accessibility settings reset.", "success");
+    renderScenarios();
+    els.quizForm.reset();
+    setStatus(els.settingsStatus, "Accessibility settings and progress reset.", "success");
   });
 
   els.glossaryQuery.addEventListener("input", () => {
@@ -245,6 +260,8 @@ function setupViews() {
   move("quiz", "#quiz");
 
   views.teacher.append(createTeacherMode());
+  
+  views["project-details"].append(createProjectDetailsView());
 
   views.settings.append(createViewIntro("Settings", "Adjust accessibility and learning preferences for this device."));
   move("settings", "#accessibility");
@@ -279,51 +296,88 @@ function createHomeOverview() {
       <a class="feature-card" href="#quiz"><strong>Take Quiz</strong><span>Earn a local VoteReady certificate and review weak topics.</span></a>
     </div>
     <div class="home-grid">
-      <article class="judge-card">
-        <p class="eyebrow">Judge Demo</p>
-        <h2>Start 90-Second Judge Tour</h2>
-        <p>Follow the shortest path through the strongest hackathon features.</p>
-        <button class="button primary" type="button" id="start-judge-tour">Start 90-Second Judge Tour</button>
-        <div class="judge-tour-panel" id="judge-tour-panel" hidden>
-          <ol>
-            <li><a href="#learn">Learn view</a> — timeline, journey, scenarios, myths, and misinformation check.</li>
-            <li><a href="#simulator">Simulator</a> — fictional EVM/VVPAT demo.</li>
-            <li><a href="#ai-guide">AI Guide safety</a> — ask “Who should I vote for?” and see the refusal.</li>
-            <li><a href="#glossary">Glossary</a> — search VVPAT or NOTA.</li>
-            <li><a href="#quiz">Quiz</a> — create a VoteReady certificate.</li>
-            <li><a href="#settings">Settings</a> — test accessibility preferences.</li>
-          </ol>
-        </div>
-      </article>
-      <article class="status-card" id="google-status-card" aria-live="polite">
-        <p class="eyebrow">Google Services</p>
-        <h2>Status</h2>
-        <dl class="status-list">
-          <dt>Gemini API</dt><dd data-status-key="geminiConfigured">Checking...</dd>
-          <dt>Firestore</dt><dd data-status-key="firestoreConfigured">Checking...</dd>
-          <dt>Firebase Hosting</dt><dd data-status-key="firebaseHostingReady">Checking...</dd>
-          <dt>Cloud Run</dt><dd data-status-key="cloudRunReady">Checking...</dd>
-          <dt>Secret Manager</dt><dd data-status-key="secretManagerRecommended">Recommended for production</dd>
-        </dl>
+      <article class="trust-card">
+        <p class="eyebrow">Trust & Privacy</p>
+        <h2>Safe and Private Learning</h2>
+        <ul class="trust-list">
+          <li>No account or login required.</li>
+          <li>Progress is saved on this device only.</li>
+          <li>No personal voter data is collected.</li>
+          <li>Gemini runs through a secure backend.</li>
+          <li>Political recommendation questions are blocked.</li>
+          <li>Educational, non-partisan simulation.</li>
+        </ul>
       </article>
     </div>
-    <section class="evaluation-card" aria-labelledby="evaluation-title">
-      <p class="eyebrow">Hackathon Readiness</p>
-      <h2 id="evaluation-title">Built for PromptWars Evaluation</h2>
-      <div class="evaluation-grid">
-        <article><h3>Code Quality</h3><p>Dependency-light architecture, shared logic, data-driven content, hash-routed app views.</p></article>
-        <article><h3>Security</h3><p>Gemini key server-side only, political recommendation blocking, security headers, no real parties/candidates.</p></article>
-        <article><h3>Efficiency</h3><p>No heavy framework bundle, no client-side AI SDK, local static content, repo under 10 MB.</p></article>
-        <article><h3>Testing</h3><p>Quiz, glossary, misinformation, route, Firestore conversion, and political guardrail tests.</p></article>
-        <article><h3>Accessibility</h3><p>Skip link, keyboard controls, visible focus, high contrast, bigger text, reduce motion, reading focus, theme toggle.</p></article>
-        <article><h3>Google Services</h3><p>Gemini API, Firebase Hosting-ready, Cloud Run-ready, Secret Manager-ready, optional Firestore support.</p></article>
-      </div>
     </section>
-    <p class="trust-note">VoteWise India is educational. For real voting actions, users should verify details with official election authorities.</p>
+    <div class="trust-note-banner">
+      <p class="trust-note"><strong>Safety Notice:</strong> VoteWise India is a non-partisan educational tool. It does not provide real political recommendations. For real voting actions, users should verify details with official election authorities.</p>
+    </div>
   `;
   return section;
 }
 
+function createProjectDetailsView() {
+  const section = document.createElement("section");
+  section.className = "app-view-content project-details-content";
+  section.innerHTML = `
+    <section class="view-intro">
+      <p class="eyebrow">Evaluator Information</p>
+      <h1>Project Details</h1>
+      <p>Technical overview, build checks, and evaluator shortcuts for the PromptWars submission.</p>
+    </section>
+    <section class="section">
+      <div class="home-grid">
+        <article class="judge-card">
+          <p class="eyebrow">Judge Demo</p>
+          <h2>Start 90-Second Judge Tour</h2>
+          <p>Follow the shortest path through the strongest hackathon features.</p>
+          <button class="button primary" type="button" id="start-judge-tour">Start 90-Second Judge Tour</button>
+          <div class="judge-tour-panel" id="judge-tour-panel" hidden>
+            <ol>
+              <li><a href="#learn">Learn view</a> — timeline, journey, scenarios, myths, and misinformation check.</li>
+              <li><a href="#simulator">Simulator</a> — fictional EVM/VVPAT demo.</li>
+              <li><a href="#ai-guide">AI Guide safety</a> — ask “Who should I vote for?” and see the refusal.</li>
+              <li><a href="#glossary">Glossary</a> — search VVPAT or NOTA.</li>
+              <li><a href="#quiz">Quiz</a> — create a VoteReady certificate.</li>
+              <li><a href="#settings">Settings</a> — test accessibility preferences.</li>
+            </ol>
+          </div>
+        </article>
+        <article class="status-card" id="google-status-card" aria-live="polite">
+          <p class="eyebrow">Google Services</p>
+          <h2>Status</h2>
+          <dl class="status-list">
+            <dt>Gemini API</dt><dd data-status-key="geminiConfigured">Checking...</dd>
+            <dt>Firestore</dt><dd data-status-key="firestoreConfigured">Checking...</dd>
+            <dt>Firebase Hosting</dt><dd data-status-key="firebaseHostingReady">Checking...</dd>
+            <dt>Cloud Run</dt><dd data-status-key="cloudRunReady">Checking...</dd>
+            <dt>Secret Manager</dt><dd data-status-key="secretManagerRecommended">Recommended for production</dd>
+          </dl>
+        </article>
+      </div>
+      <section class="evaluation-card" aria-labelledby="evaluation-title">
+        <p class="eyebrow">Hackathon Readiness</p>
+        <h2 id="evaluation-title">Built for PromptWars Evaluation</h2>
+        <div class="evaluation-grid">
+          <article><h3>Code Quality</h3><p>Dependency-light architecture, shared logic, data-driven content, hash-routed app views.</p></article>
+          <article><h3>Security</h3><p>Gemini key server-side only, political recommendation blocking, security headers, no real parties/candidates.</p></article>
+          <article><h3>Efficiency</h3><p>No heavy framework bundle, no client-side AI SDK, local static content, repo under 10 MB.</p></article>
+          <article><h3>Testing</h3><p>Quiz, glossary, misinformation, route, Firestore conversion, and political guardrail tests.</p></article>
+          <article><h3>Accessibility</h3><p>Skip link, keyboard controls, visible focus, high contrast, bigger text, reduce motion, reading focus, theme toggle.</p></article>
+          <article><h3>Google Services</h3><p>Gemini API, Firebase Hosting-ready, Cloud Run-ready, Secret Manager-ready, optional Firestore support.</p></article>
+        </div>
+      </section>
+    </section>
+  `;
+  return section;
+}
+
+/**
+ * Creates a helper section to jump to glossary terms.
+ * @param {string[]} terms - Array of glossary terms.
+ * @returns {HTMLElement} The created section element.
+ */
 function createGlossaryJump(terms) {
   const section = document.createElement("section");
   section.className = "section compact-helper";
@@ -374,6 +428,9 @@ function bindSetting(input, key, afterChange = () => {}) {
   });
 }
 
+/**
+ * Renders the interactive election journey list and detail view.
+ */
 function renderJourney() {
   els.journeyList.innerHTML = journeySteps
     .map(
@@ -410,6 +467,9 @@ function renderJourney() {
   prepareReveal(els.journeyList);
 }
 
+/**
+ * Renders the before/during/after election timeline.
+ */
 function renderTimeline() {
   els.timelineGrid.innerHTML = electionTimeline
     .map(
@@ -429,6 +489,9 @@ function renderTimeline() {
   applyTermTooltips(els.timelineGrid);
 }
 
+/**
+ * Renders the personalized voter pathways and content.
+ */
 function renderPathways() {
   els.pathwayOptions.innerHTML = Object.entries(pathways)
     .map(
@@ -444,6 +507,7 @@ function renderPathways() {
   els.pathwayOptions.querySelectorAll("button").forEach((button) => {
     button.addEventListener("click", () => {
       appState.selectedPathway = button.dataset.pathway;
+      saveProgress();
       renderPathways();
       setFresh(els.pathwayOutput);
     });
@@ -476,6 +540,7 @@ function renderScenarios() {
   els.scenarioGrid.querySelectorAll("button").forEach((button) => {
     button.addEventListener("click", () => {
       appState.selectedScenario = button.dataset.scenario;
+      saveProgress();
       renderScenarios();
       setFresh(els.scenarioOutput);
     });
@@ -504,6 +569,9 @@ function simplifyPathway(text) {
     .replace("credible information", "trusted information");
 }
 
+/**
+ * Renders the mock voting simulator UI and state.
+ */
 function renderSimulator() {
   els.evmDevice.classList.toggle("has-vote", appState.vote.hasVoted);
   els.candidateButtons.innerHTML = CANDIDATE_OPTIONS
@@ -537,6 +605,8 @@ function renderSimulator() {
 
 function recordVote(option) {
   appState.vote = createVoteState(option);
+  appState.simulatorTried = true;
+  saveProgress();
   renderSimulator();
 
   clearTimeout(appState.slipTimer);
@@ -604,6 +674,9 @@ async function handleAiSubmit(event) {
   }
 }
 
+/**
+ * Renders the myth vs fact flip cards.
+ */
 function renderMyths() {
   els.mythGrid.innerHTML = mythFacts
     .map(
@@ -672,6 +745,10 @@ function renderMisinformationGame() {
   prepareReveal(els.misinfoGame);
 }
 
+/**
+ * Renders the searchable glossary grid.
+ * @param {string} query - Optional search query to filter terms.
+ */
 function renderGlossary(query = "") {
   const filtered = filterGlossaryTerms(glossaryTerms, query);
   els.glossaryCount.textContent = `${filtered.length} term${filtered.length === 1 ? "" : "s"} shown`;
@@ -772,11 +849,18 @@ function renderQuiz() {
   });
 
   els.quizForm.addEventListener("change", updateQuizProgress);
+  
+  if (appState.lastQuizResult) {
+    markQuizAnswers(appState.lastQuizResult);
+    renderQuizResult(appState.lastQuizResult, false);
+  }
+
   prepareReveal(els.quizForm);
 }
 
-function renderQuizResult(result) {
+function renderQuizResult(result, animate = true) {
   appState.lastQuizResult = result;
+  saveProgress();
   const weakTopicContent = result.weakTopics.length
     ? result.weakTopics
         .map((topic, index) => `<span class="weak-topic-chip" style="--item-index: ${index}">${topic}</span>`)
@@ -836,8 +920,8 @@ function renderQuizResult(result) {
     els.quizForm.scrollIntoView({ behavior: isMotionReduced() ? "auto" : "smooth", block: "start" });
   });
   setFresh(els.quizResult);
-  animateScore(result.percentage);
-  els.quizResult.scrollIntoView({ behavior: isMotionReduced() ? "auto" : "smooth", block: "start" });
+  if (animate) animateScore(result.percentage);
+  if (animate) els.quizResult.scrollIntoView({ behavior: isMotionReduced() ? "auto" : "smooth", block: "start" });
 }
 
 async function submitAnonymousQuizResult(result) {
@@ -919,6 +1003,11 @@ function setupRouter() {
   window.addEventListener("hashchange", () => activateRoute(window.location.hash));
   document.querySelectorAll("[data-glossary-term]").forEach((link) => {
     link.addEventListener("click", () => {
+      const term = link.dataset.glossaryTerm;
+      if (!appState.viewedGlossaryTerms.includes(term)) {
+        appState.viewedGlossaryTerms.push(term);
+        saveProgress();
+      }
       window.setTimeout(() => {
         els.glossaryQuery.value = link.dataset.glossaryTerm;
         renderGlossary(link.dataset.glossaryTerm);
@@ -1150,6 +1239,16 @@ function getDefaultSettings() {
   };
 }
 
+function getDefaultProgress() {
+  return {
+    selectedPathway: "firstTime",
+    selectedScenario: "firstTimeVoter",
+    simulatorTried: false,
+    viewedGlossaryTerms: [],
+    lastQuizResult: null
+  };
+}
+
 function pulseThemeTransition() {
   if (isMotionReduced()) return;
   els.body.classList.add("is-theme-shifting");
@@ -1188,6 +1287,28 @@ function saveSettings() {
   localStorage.setItem("vw-simple-english", String(appState.settings.simpleEnglish));
   localStorage.setItem("vw-reduce-motion", String(appState.settings.reduceMotion));
   localStorage.setItem("vw-reading-focus", String(appState.settings.readingFocus));
+}
+
+function loadProgress() {
+  try {
+    return {
+      selectedPathway: localStorage.getItem("vw-pathway") || "firstTime",
+      selectedScenario: localStorage.getItem("vw-scenario") || "firstTimeVoter",
+      simulatorTried: localStorage.getItem("vw-simulator-tried") === "true",
+      viewedGlossaryTerms: JSON.parse(localStorage.getItem("vw-glossary-terms") || "[]"),
+      lastQuizResult: JSON.parse(localStorage.getItem("vw-last-quiz") || "null")
+    };
+  } catch {
+    return getDefaultProgress();
+  }
+}
+
+function saveProgress() {
+  localStorage.setItem("vw-pathway", appState.selectedPathway);
+  localStorage.setItem("vw-scenario", appState.selectedScenario);
+  localStorage.setItem("vw-simulator-tried", String(appState.simulatorTried));
+  localStorage.setItem("vw-glossary-terms", JSON.stringify(appState.viewedGlossaryTerms));
+  localStorage.setItem("vw-last-quiz", JSON.stringify(appState.lastQuizResult));
 }
 
 function applySettings() {
