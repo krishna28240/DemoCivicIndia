@@ -273,7 +273,7 @@ function createViewIntro(title, description) {
   const section = document.createElement("section");
   section.className = "view-intro";
   section.innerHTML = `
-    <p class="eyebrow">VoteWise India</p>
+    <p class="eyebrow">DemoCivic India</p>
     <h1>${title}</h1>
     <p>${description}</p>
   `;
@@ -287,7 +287,7 @@ function createHomeOverview() {
     <div class="section-heading">
       <p class="eyebrow">Start Here</p>
       <h2>Choose the tool you need right now.</h2>
-      <p>VoteWise India is organized into focused app views so learning stays calm and manageable.</p>
+      <p>DemoCivic India is organized into focused app views so learning stays calm and manageable.</p>
     </div>
     <div class="feature-grid">
       <a class="feature-card" href="#learn"><strong>Start Learning</strong><span>Timeline, journey, scenarios, FAQ, myths, and misinformation practice.</span></a>
@@ -311,7 +311,7 @@ function createHomeOverview() {
     </div>
     </section>
     <div class="trust-note-banner">
-      <p class="trust-note"><strong>Safety Notice:</strong> VoteWise India is a non-partisan educational tool. It does not provide real political recommendations. For real voting actions, users should verify details with official election authorities.</p>
+      <p class="trust-note"><strong>Safety Notice:</strong> DemoCivic India is a non-partisan educational tool. It does not provide real political recommendations. For real voting actions, users should verify details with official election authorities.</p>
     </div>
   `;
   return section;

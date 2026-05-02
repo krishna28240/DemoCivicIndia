@@ -1,12 +1,12 @@
-# Building VoteWise India for PromptWars / Build with AI 2026
+# Building DemoCivic India for PromptWars / Build with AI 2026
 
-For PromptWars / Build with AI 2026, I built VoteWise India, a non-partisan election process education app for students and first-time voters. The goal was to make election learning feel interactive instead of turning it into a long page of civic studies notes.
+For PromptWars / Build with AI 2026, I built DemoCivic India, a non-partisan election process education app for students and first-time voters. The goal was to make election learning feel interactive instead of turning it into a long page of civic studies notes.
 
 ## The Problem
 
 Many young learners understand elections mainly as the moment of voting. But an election is a full process: eligibility, registration, electoral rolls, candidate nomination, campaigning, polling day, EVM/VVPAT, counting, and results. If students only learn the final step, the rest can feel confusing or intimidating.
 
-VoteWise India tries to make that process easier to understand through guided interaction.
+DemoCivic India tries to make that process easier to understand through guided interaction.
 
 I later reorganized the prototype from one long page into lightweight app-style views: Home, Learn, Simulator, AI Guide, Glossary, Quiz, Teacher Mode, and Settings. It still uses one HTML entry and no framework, but hash routes make it feel easier to navigate.
 
@@ -49,7 +49,7 @@ This makes the AI feature part of the learning system instead of a chatbot paste
 
 ## Safety Guardrails
 
-VoteWise India is completely non-partisan. It does not use real parties or real candidates in simulations. The mock voting simulator uses only Candidate A, Candidate B, Candidate C, and NOTA.
+DemoCivic India is completely non-partisan. It does not use real parties or real candidates in simulations. The mock voting simulator uses only Candidate A, Candidate B, Candidate C, and NOTA.
 
 The AI guide blocks political recommendation questions before sending them to Gemini. For example, if someone asks who to vote for, the app refuses politely and offers to explain how voting works or how to evaluate information safely.
 
@@ -118,4 +118,4 @@ Future versions could add:
 - Voice narration for accessibility.
 - More detailed process modules with citations to official election education material.
 
-VoteWise India is a small build, but the mission is important: help people understand the election process without pushing them toward any political choice.
+DemoCivic India is a small build, but the mission is important: help people understand the election process without pushing them toward any political choice.

@@ -26,13 +26,13 @@ const port = Number(process.env.PORT || 3000);
 const model = process.env.GEMINI_MODEL || DEFAULT_GEMINI_MODEL;
 
 const GEMINI_SYSTEM_INSTRUCTION = [
-  "You are VoteWise India's AI Election Guide.",
+  "You are DemoCivic India's AI Election Guide.",
   "Explain the Indian election process for students and first-time voters.",
   "Be non-partisan, factual, concise, and beginner-friendly.",
   "Do not recommend, rank, support, or oppose any political party or candidate.",
   "Do not use real party names or real candidate names.",
   "If asked for political persuasion, refuse briefly and redirect to election process education.",
-  "Clarify that VoteWise India is educational and not an official Election Commission website when relevant."
+  "Clarify that DemoCivic India is educational and not an official Election Commission website when relevant."
 ].join(" ");
 
 const requestLog = new Map();
@@ -81,7 +81,7 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(port, () => {
-  console.log(`VoteWise India running at http://localhost:${port}`);
+  console.log(`DemoCivic India running at http://localhost:${port}`);
 });
 
 /**

@@ -1,4 +1,4 @@
-I’m building VoteWise India for PromptWars / Build with AI 2026.
+I'm building DemoCivic India for PromptWars / Build with AI 2026.
 
 The idea is simple: help students and first-time voters understand the Indian election process by experiencing it, not just reading paragraphs.
 

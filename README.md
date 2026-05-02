@@ -1,6 +1,6 @@
-# VoteWise India
+# DemoCivic India
 
-VoteWise India is a non-partisan election process education app for students and first-time voters learning how Indian elections work. It teaches through interaction: a journey map, before/during/after timeline, scenario cards, searchable glossary, term tooltips, FAQ, misinformation check mini-game, fictional EVM/VVPAT simulator, Gemini-powered AI guide, myth vs fact cards, VoteReady certificate quiz, accessibility controls, and optional anonymous quiz-result storage in Firestore.
+DemoCivic India is a non-partisan election process education app for students and first-time voters learning how Indian elections work. It teaches through interaction: a journey map, before/during/after timeline, scenario cards, searchable glossary, term tooltips, FAQ, misinformation check mini-game, fictional EVM/VVPAT simulator, Gemini-powered AI guide, myth vs fact cards, VoteReady certificate quiz, accessibility controls, and optional anonymous quiz-result storage in Firestore.
 
 This is an educational simulation. It is not an official Election Commission website and it does not provide political recommendations.
 
@@ -110,7 +110,7 @@ Dockerfile
 
 ## App Views
 
-VoteWise India uses hash routes instead of a heavy frontend framework:
+DemoCivic India uses hash routes instead of a heavy frontend framework:
 
 - `#home`: hero, safety promise, and quick feature cards.
 - `#learn`: timeline, election journey, pathway, scenarios, myths, misinformation check, and FAQ.
@@ -280,7 +280,7 @@ Manual IAM setup may be required so the Cloud Run service account can access the
 
 ### Firestore Support
 
-VoteWise India includes real optional Firestore support for anonymous quiz results:
+DemoCivic India includes real optional Firestore support for anonymous quiz results:
 
 ```text
 POST /api/quiz-results
@@ -346,5 +346,5 @@ You can host only the `public/` folder on Firebase Hosting, but Gemini and Fires
 
 ## Non-Partisan Disclaimer
 
-VoteWise India is an educational, non-partisan simulation. It is not an official Election Commission website and does not provide political recommendations.
+DemoCivic India is an educational, non-partisan simulation. It is not an official Election Commission website and does not provide political recommendations.
 # ElectionProcessEducation

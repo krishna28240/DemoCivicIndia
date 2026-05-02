@@ -131,7 +131,7 @@ export const mythFacts = [
   },
   {
     myth: "AI can tell me which party is best.",
-    fact: "VoteWise India only explains election processes and does not provide political recommendations."
+    fact: "DemoCivic India only explains election processes and does not provide political recommendations."
   }
 ];
 
@@ -211,7 +211,7 @@ export const quizQuestions = [
   {
     id: "q10",
     topic: "AI Safety",
-    question: "What should VoteWise India do if asked which party is best?",
+    question: "What should DemoCivic India do if asked which party is best?",
     options: ["Recommend the most popular option", "Oppose a candidate", "Refuse recommendations and explain the election process", "Guess based on the user's city"],
     answer: 2,
     explanation: "The app is non-partisan and must not recommend or oppose parties or candidates."
@@ -399,7 +399,7 @@ export const glossaryTerms = [
     term: "Election Commission",
     explanation: "The constitutional body responsible for administering elections in India.",
     matters: "It manages election procedures and helps protect fairness and trust.",
-    example: "VoteWise India is educational and is not an official Election Commission website.",
+    example: "DemoCivic India is educational and is not an official Election Commission website.",
     related: ["Election", "Model Code of Conduct", "Counting"]
   },
   {
@@ -441,8 +441,8 @@ export const faqItems = [
     answer: "The EVM records the vote. VVPAT briefly displays a paper slip so the voter can visually verify the selected option."
   },
   {
-    question: "Is VoteWise India an official election website?",
-    answer: "No. VoteWise India is an educational, non-partisan simulation and is not an official Election Commission website."
+    question: "Is DemoCivic India an official election website?",
+    answer: "No. DemoCivic India is an educational, non-partisan simulation and is not an official Election Commission website."
   },
   {
     question: "Can the AI tell me who to vote for?",
