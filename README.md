@@ -347,3 +347,4 @@ You can host only the `public/` folder on Firebase Hosting, but Gemini and Fires
 ## Non-Partisan Disclaimer
 
 VoteWise India is an educational, non-partisan simulation. It is not an official Election Commission website and does not provide political recommendations.
+# ElectionProcessEducation
