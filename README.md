@@ -7,10 +7,10 @@ This is an educational simulation. It is not an official Election Commission web
 
 ## Submission Links
 
-- Live App: https://votewise-india-api-366445017721.us-central1.run.app
-- GitHub Repository: https://github.com/AdvikSharma917/votewise-india
-- Technical Blog: https://dev.to/advik_sharma917/building-votewise-india-an-ai-powered-election-process-education-simulator-2njb
-- LinkedIn Build-in-Public Post: https://www.linkedin.com/feed/update/urn:li:activity:7455754906424143872/
+- 🔗 Live: https://democivicindia.onrender.com/
+- 💻 GitHub: https://github.com/krishna28240/DemoCivicIndia
+- 📝 Medium: https://medium.com/@krishna28240/building-democivic-india-an-ai-powered-election-education-platform-eea701b21418
+- 💼 LinkedIn: https://www.linkedin.com/in/krishna-chavan-2baa85371/
 
 
 ## Quick Start
